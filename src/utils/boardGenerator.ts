@@ -6,7 +6,7 @@ export interface cellTemplate {
 }
 const cellTemplate = { piece: '-', isSelected: false, isAvailableMove: false, coords: [0, 0] };
 
-export const generateBoardState = (dimensions: number): cellTemplate[][] => {
+const generateBoardState = (dimensions: number): cellTemplate[][] => {
   //create matrix of equal number of rows and columns
   const board = [...Array(dimensions)].map((el) =>
     [...Array(dimensions)].map((cell) => {
@@ -15,3 +15,5 @@ export const generateBoardState = (dimensions: number): cellTemplate[][] => {
   );
   return board;
 };
+
+export default generateBoardState;
