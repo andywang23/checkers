@@ -6,7 +6,7 @@ const StyledApp = styled.div`
   justify-content: center;
 `;
 
-function App(): StyledComponent<'div', any, {}, never> {
+function App() {
   return <StyledApp></StyledApp>;
 }
 

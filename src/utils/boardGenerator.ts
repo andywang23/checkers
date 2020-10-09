@@ -13,7 +13,6 @@ export const generateBoardState = (dimensions: number) => {
       return { ...cellTemplate };
     })
   );
-
   return board;
 };
 
