@@ -1,26 +1,26 @@
 import React from 'react';
+import styled from 'styled-components';
 
 function ColorRadioInput({ setPieceColor }) {
   return (
-    <div>
-      <form>
-        <input
-          type="radio"
-          value="red-black"
-          name="pieceColor"
-          checked
-          onClick={() => setPieceColor('red black')}
-        />
-        <label for="red-black">Red / Black</label>
-        <input
-          type="radio"
-          name="pieceColor"
-          value="blue-green"
-          onClick={() => setPieceColor('blue green')}
-        />
-        <label for="blue-green">Blue / Green</label>
-      </form>
-    </div>
+    <form>
+      Select Piece Colors:
+      <input
+        type="radio"
+        value="red-black"
+        name="pieceColor"
+        checked
+        onClick={() => setPieceColor('red black')}
+      />
+      <label for="red-black">Red / Black</label>
+      <input
+        type="radio"
+        name="pieceColor"
+        value="blue-green"
+        onClick={() => setPieceColor('blue green')}
+      />
+      <label for="blue-green">Blue / Green</label>
+    </form>
   );
 }
 

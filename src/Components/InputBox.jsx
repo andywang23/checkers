@@ -9,11 +9,11 @@ const InputBox = ({ setDimensions }) => {
   const inputRef = useRef(undefined);
 
   return (
-    <>
-      <label htmlFor="dimInput">Set Board Dimensions</label>
+    <div>
+      <label htmlFor="dimInput">Set Board Dimensions: </label>
       <input name="dimInput" ref={inputRef}></input>
       <button onClick={handleSubmit}>Submit</button>
-    </>
+    </div>
   );
 };
 

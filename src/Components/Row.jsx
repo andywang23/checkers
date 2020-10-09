@@ -5,7 +5,7 @@ function Row({ rowIdx, rowArr }) {
   return (
     <>
       {rowArr.map((box, colIdx) => (
-        <Box key={`${rowIdx}-${colIdx}`} coords={[rowIdx, colIdx]} piece={box.piece} />
+        <Box key={`${rowIdx}-${colIdx}`} coords={[rowIdx, colIdx]} boxState={box} />
       ))}
     </>
   );

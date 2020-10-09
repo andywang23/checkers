@@ -11,6 +11,8 @@ const BoxDiv = styled.div`
 
   background-color: ${(props) => {
     const [row, col] = props.coords;
+    //even-numbered rows will start with black boxes and alternate
+    //odd-numbered cells will start with white boxes and alternate
     if (row % 2) {
       if (col % 2) return 'black';
     } else {
@@ -22,13 +24,19 @@ const BoxDiv = styled.div`
 const Piece = styled.div`
   width: 50%;
   height: 50%;
-  border-radius: 100%;
+  border-radius: ${(props) => (props.shape === 'circle' ? '100%' : '0%')};
   border: 1px solid gray;
   background-color: ${(props) => props.background};
 `;
 
-function Box({ coords, piece }) {
-  return <BoxDiv coords={coords}>{piece !== '-' ? <Piece background={piece} /> : null}</BoxDiv>;
+function Box({ coords, boxState }) {
+  const { piece, shape } = boxState;
+
+  return (
+    <BoxDiv coords={coords}>
+      {piece !== '-' ? <Piece background={piece} shape={shape} /> : null}
+    </BoxDiv>
+  );
 }
 
 export default Box;
