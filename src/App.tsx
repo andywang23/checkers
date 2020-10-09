@@ -14,7 +14,7 @@ const StyledApp = styled.div`
 
 function App() {
   const [dimensions, setDimensions] = useState<number>(0);
-  const [pieceColors, setPieceColor] = useState('red black');
+  const [pieceColors, setPieceColor] = useState<string>('red black');
   const [pieceShape, setPieceShape] = useState('circle');
 
   const pieceColorArr = pieceColors.split(' ');

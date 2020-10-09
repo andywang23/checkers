@@ -24,17 +24,17 @@ const BoxDiv = styled.div`
 const Piece = styled.div`
   width: 50%;
   height: 50%;
-  border-radius: ${(props) => (props.shape === 'circle' ? '100%' : '0%')};
+  border-radius: ${(props) => (props.pieceShape === 'circle' ? '100%' : '0%')};
   border: 1px solid gray;
   background-color: ${(props) => props.background};
 `;
 
 function Box({ coords, boxState }) {
-  const { piece, shape } = boxState;
+  const { piece, pieceShape } = boxState;
 
   return (
     <BoxDiv coords={coords}>
-      {piece !== '-' ? <Piece background={piece} shape={shape} /> : null}
+      {piece !== '-' ? <Piece background={piece} pieceShape={pieceShape} /> : null}
     </BoxDiv>
   );
 }

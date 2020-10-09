@@ -2,6 +2,7 @@ import React, { useReducer } from 'react';
 import generateBoardState, { fillPieces } from '../utils/boardGenerator';
 import styled from 'styled-components';
 import Row from '../Components/Row';
+import { cloneDeep } from 'lodash';
 
 const BoardDiv = styled.div`
   display: grid;
@@ -12,12 +13,25 @@ const BoardDiv = styled.div`
 `;
 
 const actionTypes = {
-  changeColor: 'changeColor',
+  selectPiece: 'selectPiece',
 };
 
 const gameStateReducer = (state, action) => {
+  let newBoard, row, col;
+  if (action.payload && action.payload.coords) [row, col] = action.payload.coords;
+
   switch (action.type) {
-    case actionTypes.changeColor:
+    case actionTypes.selectPiece:
+      newBoard = cloneDeep(state.boardState);
+      if (newBoard[row] && newBoard[row][col]) {
+        newBoard[row][col].isSelected = !state.boardState[row][col].isSelected;
+      }
+
+      return {
+        ...state,
+        selectedPieceCoords: [row, col],
+        boardState: newBoard,
+      };
 
     default:
       return state;
@@ -26,8 +40,8 @@ const gameStateReducer = (state, action) => {
 
 export default function Board({ dimensions, pieceColors, pieceShape }) {
   const initialState = {
-    boardState: fillPieces(generateBoardState(dimensions), pieceColors),
-    selectedPiece: null,
+    boardState: fillPieces(generateBoardState(dimensions), pieceColors, pieceShape),
+    selectedPieceCoords: [],
   };
 
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
