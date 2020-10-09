@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 const InputBox = ({ setDimensions }) => {
   function handleSubmit() {
     const input = inputRef.current?.value;
-    setDimensions(input);
+    setDimensions(Number(input));
   }
 
   const inputRef = useRef(undefined);
