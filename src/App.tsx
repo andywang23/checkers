@@ -22,7 +22,7 @@ function App() {
         <>
           <InputBox setDimensions={setDimensions} />
           <ColorRadioInput setPieceColor={setPieceColor} />
-          <ShapeRadioInput setPieceShape={setPieceShape}>
+          {/* <ShapeRadioInput setPieceShape={setPieceShape}> */}
         </>
       ) : (
         <Board dimensions={dimensions} pieceColors={pieceColorArr} />

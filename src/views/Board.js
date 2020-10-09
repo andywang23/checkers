@@ -2,7 +2,6 @@ import React, { useReducer } from 'react';
 import generateBoardState, { fillPieces } from '../utils/boardGenerator';
 import styled from 'styled-components';
 import Box from '../Components/Box';
-import RadioInput from '../Components/RadioInput';
 
 const BoardDiv = styled.div`
   display: grid;
@@ -19,7 +18,6 @@ const actionTypes = {
 const gameStateReducer = (state, action) => {
   switch (action.type) {
     case actionTypes.changeColor:
-      return;
 
     default:
       return state;
