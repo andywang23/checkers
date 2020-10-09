@@ -9,9 +9,14 @@ const BoxDiv = styled.div`
   height: 100%;
   border: 1px solid black;
 
-  &:nth-of-type(${(props) => (props.backgroundOffset ? 'odd' : 'even')}) {
-    background-color: black;
-  }
+  background-color: ${(props) => {
+    const [row, col] = props.coords;
+    if (row % 2) {
+      if (col % 2) return 'black';
+    } else {
+      if (!(col % 2)) return 'black';
+    }
+  }};
 `;
 
 const Piece = styled.div`
@@ -22,12 +27,8 @@ const Piece = styled.div`
   background-color: ${(props) => props.background};
 `;
 
-function Box({ blackBackgroundStart, coords, piece }) {
-  return (
-    <BoxDiv blackBackgroundStart={blackBackgroundStart}>
-      {piece !== '-' ? <Piece background={piece} /> : null}
-    </BoxDiv>
-  );
+function Box({ coords, piece }) {
+  return <BoxDiv coords={coords}>{piece !== '-' ? <Piece background={piece} /> : null}</BoxDiv>;
 }
 
 export default Box;

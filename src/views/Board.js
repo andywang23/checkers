@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import generateBoardState, { fillPieces } from '../utils/boardGenerator';
 import styled from 'styled-components';
-import Box from '../Components/Box';
+import Row from '../Components/Row';
 
 const BoardDiv = styled.div`
   display: grid;
@@ -34,17 +34,9 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
 
   return (
     <BoardDiv dimensions={dimensions}>
-      {gameState.boardState.map((row, rowIdx) => {
-        return row.map((col, colIdx) => {
-          return (
-            <Box
-              key={`${rowIdx}-${colIdx}`}
-              coords={[rowIdx, colIdx]}
-              piece={gameState.boardState[rowIdx][colIdx].piece}
-            />
-          );
-        });
-      })}
+      {gameState.boardState.map((row, rowIdx) => (
+        <Row dimensions={dimensions} rowIdx={rowIdx} rowArr={row} />
+      ))}
     </BoardDiv>
   );
 }
