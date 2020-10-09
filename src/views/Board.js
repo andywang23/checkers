@@ -22,11 +22,9 @@ const gameStateReducer = (state, action) => {
     default:
       return state;
   }
-
-  return state;
 };
 
-export default function Board({ dimensions, pieceColors }) {
+export default function Board({ dimensions, pieceColors, pieceShape }) {
   const initialState = {
     boardState: fillPieces(generateBoardState(dimensions), pieceColors),
     selectedPiece: null,
@@ -34,23 +32,19 @@ export default function Board({ dimensions, pieceColors }) {
 
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
 
-  let blackBackground = true;
-
   return (
     <BoardDiv dimensions={dimensions}>
-      {gameState.boardState.map((col, colIdx) =>
-        col.map((row, rowIdx) => {
-          blackBackground = !blackBackground;
+      {gameState.boardState.map((row, rowIdx) => {
+        return row.map((col, colIdx) => {
           return (
             <Box
-              key={`${colIdx}-${rowIdx}`}
-              blackBackground={blackBackground}
-              coords={[colIdx, rowIdx]}
-              piece={gameState.boardState[colIdx][rowIdx].piece}
+              key={`${rowIdx}-${colIdx}`}
+              coords={[rowIdx, colIdx]}
+              piece={gameState.boardState[rowIdx][colIdx].piece}
             />
           );
-        })
-      )}
+        });
+      })}
     </BoardDiv>
   );
 }

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import InputBox from './Components/InputBox.jsx';
 import Board from './views/Board.js';
 import ColorRadioInput from './Components/ColorRadioInput';
+import ShapeRadioInput from './Components/ShapeRadioInput';
 
 const StyledApp = styled.div`
   display: flex;
@@ -12,7 +13,7 @@ const StyledApp = styled.div`
 function App() {
   const [dimensions, setDimensions] = useState<number>(0);
   const [pieceColors, setPieceColor] = useState('red black');
-  const [pieceShapes, setPieceShapes] = useState('circle');
+  const [pieceShape, setPieceShape] = useState('circle');
 
   const pieceColorArr = pieceColors.split(' ');
 
@@ -22,10 +23,10 @@ function App() {
         <>
           <InputBox setDimensions={setDimensions} />
           <ColorRadioInput setPieceColor={setPieceColor} />
-          {/* <ShapeRadioInput setPieceShape={setPieceShape}> */}
+          <ShapeRadioInput setPieceShape={setPieceShape} />
         </>
       ) : (
-        <Board dimensions={dimensions} pieceColors={pieceColorArr} />
+        <Board dimensions={dimensions} pieceColors={pieceColorArr} pieceShape={pieceShape} />
       )}
     </StyledApp>
   );

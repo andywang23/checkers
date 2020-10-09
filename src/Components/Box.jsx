@@ -8,7 +8,10 @@ const BoxDiv = styled.div`
   width: 100%;
   height: 100%;
   border: 1px solid black;
-  background-color: ${(props) => (props.blackBackground ? 'black' : 'white')};
+
+  &:nth-of-type(${(props) => (props.backgroundOffset ? 'odd' : 'even')}) {
+    background-color: black;
+  }
 `;
 
 const Piece = styled.div`
@@ -19,9 +22,9 @@ const Piece = styled.div`
   background-color: ${(props) => props.background};
 `;
 
-function Box({ blackBackground, coords, piece }) {
+function Box({ blackBackgroundStart, coords, piece }) {
   return (
-    <BoxDiv blackBackground={blackBackground}>
+    <BoxDiv blackBackgroundStart={blackBackgroundStart}>
       {piece !== '-' ? <Piece background={piece} /> : null}
     </BoxDiv>
   );
