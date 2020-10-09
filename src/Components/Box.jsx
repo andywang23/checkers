@@ -16,6 +16,7 @@ const BlackPiece = styled.div`
   height: 50%;
   border-radius: 100%;
   background-color: black;
+  border: 1px solid white;
 `;
 
 const RedPiece = styled.div`
@@ -23,10 +24,16 @@ const RedPiece = styled.div`
   height: 50%;
   border-radius: 100%;
   background-color: red;
+  border: 1px solid white;
 `;
 
-function Box({ blackBackground }) {
-  return <BoxDiv blackBackground={blackBackground}></BoxDiv>;
+function Box({ blackBackground, coords, piece }) {
+  let PieceComponent = null;
+  if (piece !== '-') {
+    PieceComponent = piece === 'black' ? <BlackPiece /> : <RedPiece />;
+  }
+
+  return <BoxDiv blackBackground={blackBackground}>{PieceComponent}</BoxDiv>;
 }
 
 export default Box;

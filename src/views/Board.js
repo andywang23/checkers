@@ -1,7 +1,8 @@
 import React, { useReducer } from 'react';
-import generateBoardState from '../utils/boardGenerator';
+import generateBoardState, { fillPieces } from '../utils/boardGenerator';
 import styled from 'styled-components';
 import Box from '../Components/Box';
+import RadioInput from '../Components/RadioInput';
 
 const BoardDiv = styled.div`
   display: grid;
@@ -18,7 +19,7 @@ const gameStateReducer = (state, action) => {
 export default function Board({ dimensions }) {
   console.log(generateBoardState(dimensions));
   const initialState = {
-    boardState: generateBoardState(dimensions),
+    boardState: fillPieces(generateBoardState(dimensions)),
     currPlayer: 'black',
     selectedPiece: null,
   };
@@ -32,9 +33,17 @@ export default function Board({ dimensions }) {
       {gameState.boardState.map((col, colIdx) =>
         col.map((row, rowIdx) => {
           blackBackground = !blackBackground;
-          return <Box key={`${colIdx}-${rowIdx}`} blackBackground={blackBackground} />;
+          return (
+            <Box
+              key={`${colIdx}-${rowIdx}`}
+              blackBackground={blackBackground}
+              coords={[colIdx, rowIdx]}
+              piece={gameState.boardState[colIdx][rowIdx].piece}
+            />
+          );
         })
       )}
+      <RadioInput />
     </BoardDiv>
   );
 }
