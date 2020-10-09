@@ -16,18 +16,19 @@ const generateBoardState = (dimensions: number): cellTemplate[][] => {
   return board;
 };
 
-export const fillPieces = (board: cellTemplate[][]): cellTemplate[][] => {
+export const fillPieces = (board: cellTemplate[][], colorArr: string[]): cellTemplate[][] => {
+  const [color1, color2] = colorArr;
   for (let i = 0; i < 2; i += 1) {
     const row = board[i];
     board[i] = row.map((cell) => {
-      return { ...cell, piece: 'red' };
+      return { ...cell, piece: color1 };
     });
   }
 
   for (let i = board.length - 1; i >= board.length - 2; i -= 1) {
     const row = board[i];
     board[i] = row.map((cell) => {
-      return { ...cell, piece: 'black' };
+      return { ...cell, piece: color2 };
     });
   }
 

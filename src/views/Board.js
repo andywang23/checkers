@@ -12,15 +12,25 @@ const BoardDiv = styled.div`
   height: 800px;
 `;
 
+const actionTypes = {
+  changeColor: 'changeColor',
+};
+
 const gameStateReducer = (state, action) => {
+  switch (action.type) {
+    case actionTypes.changeColor:
+      return;
+
+    default:
+      return state;
+  }
+
   return state;
 };
 
-export default function Board({ dimensions }) {
-  console.log(generateBoardState(dimensions));
+export default function Board({ dimensions, pieceColors }) {
   const initialState = {
-    boardState: fillPieces(generateBoardState(dimensions)),
-    currPlayer: 'black',
+    boardState: fillPieces(generateBoardState(dimensions), pieceColors),
     selectedPiece: null,
   };
 
@@ -43,7 +53,6 @@ export default function Board({ dimensions }) {
           );
         })
       )}
-      <RadioInput />
     </BoardDiv>
   );
 }

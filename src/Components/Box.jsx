@@ -11,29 +11,20 @@ const BoxDiv = styled.div`
   background-color: ${(props) => (props.blackBackground ? 'black' : 'white')};
 `;
 
-const BlackPiece = styled.div`
+const Piece = styled.div`
   width: 50%;
   height: 50%;
   border-radius: 100%;
-  background-color: black;
-  border: 1px solid white;
-`;
-
-const RedPiece = styled.div`
-  width: 50%;
-  height: 50%;
-  border-radius: 100%;
-  background-color: red;
-  border: 1px solid white;
+  border: 1px solid gray;
+  background-color: ${(props) => props.background};
 `;
 
 function Box({ blackBackground, coords, piece }) {
-  let PieceComponent = null;
-  if (piece !== '-') {
-    PieceComponent = piece === 'black' ? <BlackPiece /> : <RedPiece />;
-  }
-
-  return <BoxDiv blackBackground={blackBackground}>{PieceComponent}</BoxDiv>;
+  return (
+    <BoxDiv blackBackground={blackBackground}>
+      {piece !== '-' ? <Piece background={piece} /> : null}
+    </BoxDiv>
+  );
 }
 
 export default Box;
