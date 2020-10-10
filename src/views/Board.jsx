@@ -3,6 +3,7 @@ import generateBoardState, { fillPieces } from '../utils/boardGenerator';
 import styled from 'styled-components';
 import Row from '../Components/Row';
 import { cloneDeep } from 'lodash';
+import actionTypes from '../utils/actions.js';
 
 const BoardDiv = styled.div`
   display: grid;
@@ -11,10 +12,6 @@ const BoardDiv = styled.div`
   width: 800px;
   height: 800px;
 `;
-
-const actionTypes = {
-  selectPiece: 'selectPiece',
-};
 
 const gameStateReducer = (state, action) => {
   let newBoard, row, col;
@@ -43,13 +40,12 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
     boardState: fillPieces(generateBoardState(dimensions), pieceColors, pieceShape),
     selectedPieceCoords: [],
   };
-
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
 
   return (
     <BoardDiv dimensions={dimensions}>
       {gameState.boardState.map((row, rowIdx) => (
-        <Row dimensions={dimensions} rowIdx={rowIdx} rowArr={row} />
+        <Row dimensions={dimensions} rowIdx={rowIdx} rowArr={row} dispatch={dispatch} />
       ))}
     </BoardDiv>
   );
