@@ -4,6 +4,7 @@ const actionTypes = {
   resetAvailableMove: 'resetAvailableMove',
   resetSelectedPiece: 'resetSelectedPiece',
   movePiece: 'movePiece',
+  resetBoard: 'resetBoard',
 };
 
 export default actionTypes;

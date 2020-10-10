@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useMemo } from 'react';
 import generateBoardState, { fillPieces } from '../utils/boardGenerator';
 import styled from 'styled-components';
 import Row from '../Components/Row';
@@ -56,7 +56,6 @@ const gameStateReducer = (state, action) => {
       const [rightDiagRow, rightDiagCol] =
         startingPosition === 'bottom' ? [row - 1, col + 1] : [row + 1, col + 1];
 
-      console.log(newBoard[leftDiagRow][leftDiagCol].pieceColor);
       if (
         newBoard[leftDiagRow] &&
         newBoard[leftDiagRow][leftDiagCol] &&
@@ -135,25 +134,38 @@ const gameStateReducer = (state, action) => {
         currPlayerColorIdx: currPlayerColorIdx === 0 ? 1 : 0,
       };
 
+    case actionTypes.resetBoard:
+      return action.payload;
+
     default:
       return state;
   }
 };
 
 export default function Board({ dimensions, pieceColors, pieceShape }) {
-  const initialState = {
-    boardState: fillPieces(generateBoardState(dimensions), pieceColors, pieceShape),
-    selectedPieceCoords: [],
-    lastSelectedPieceCoords: [],
-    playerColorStartingPosition: { [pieceColors[0]]: 'top', [pieceColors[1]]: 'bottom' },
-    pieceColors,
-    currPlayerColorIdx: 1,
-  };
+  //useMemo to prevent unneccesary generateBoard calls when we reset the board
+  const initialState = useMemo(() => {
+    return {
+      boardState: fillPieces(generateBoardState(dimensions), pieceColors, pieceShape),
+      selectedPieceCoords: [],
+      lastSelectedPieceCoords: [],
+      playerColorStartingPosition: { [pieceColors[0]]: 'top', [pieceColors[1]]: 'bottom' },
+      pieceColors,
+      currPlayerColorIdx: 1,
+    };
+  }, [dimensions, pieceColors, pieceShape]);
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
+
+  const handleResetClick = () => dispatch({ type: actionTypes.resetBoard, payload: initialState });
 
   return (
     <>
       <p>Current Player is: {gameState.pieceColors[gameState.currPlayerColorIdx].toUpperCase()}</p>
+      <span>
+        <button>Save</button>
+        <button onClick={handleResetClick}>Reset</button>
+      </span>
+
       <BoardDiv dimensions={dimensions}>
         {gameState.boardState.map((row, rowIdx) => (
           <Row
