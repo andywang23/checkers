@@ -15,19 +15,25 @@ const BoardDiv = styled.div`
 
 const gameStateReducer = (state, action) => {
   let newBoard, row, col;
+  const [oldRow, oldCol] = state.selectedPieceCoords;
   if (action.payload && action.payload.coords) [row, col] = action.payload.coords;
 
   switch (action.type) {
     case actionTypes.selectPiece:
       newBoard = cloneDeep(state.boardState);
-      if (newBoard[row] && newBoard[row][col]) {
-        newBoard[row][col].isSelected = !state.boardState[row][col].isSelected;
+      //only one box can be selected at once
+      //toggle isSelected on both the current selected box and the previous selected cell
+
+      newBoard[row][col].isSelected = !state.boardState[row][col].isSelected;
+
+      if (state.selectedPieceCoords.length > 0) {
+        newBoard[oldRow][oldCol].isSelected = !state.boardState[oldRow][oldCol].isSelected;
       }
 
       return {
         ...state,
-        selectedPieceCoords: [row, col],
         boardState: newBoard,
+        selectedPieceCoords: [row, col],
       };
 
     default:
@@ -39,6 +45,7 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
   const initialState = {
     boardState: fillPieces(generateBoardState(dimensions), pieceColors, pieceShape),
     selectedPieceCoords: [],
+    lastSelectedPieceCoords: [],
   };
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
 
