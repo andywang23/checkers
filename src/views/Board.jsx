@@ -1,4 +1,4 @@
-import React, { useReducer, useMemo } from 'react';
+import React, { useReducer, useMemo, useState } from 'react';
 import generateBoardState, { fillPieces } from '../utils/boardGenerator';
 import styled from 'styled-components';
 import Row from '../Components/Row';
@@ -181,7 +181,7 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
     <>
       <p>Current Player is: {gameState.pieceColors[gameState.currPlayerColorIdx].toUpperCase()}</p>
       <span>
-        <button>Save</button>
+        <button onClick={handleSaveClick}>Save</button>
         <button onClick={handleResetClick}>Reset</button>
       </span>
 

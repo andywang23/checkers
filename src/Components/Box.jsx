@@ -44,11 +44,12 @@ function Box({ coords, boxState, dispatch }) {
       dispatch({ type: actionTypes.resetAvailableMove });
     } else if (pieceColor !== '-') {
       dispatch({ type: actionTypes.resetSelectedPiece });
-      dispatch({ type: actionTypes.selectPiece, payload: { coords, pieceColor } });
       dispatch({ type: actionTypes.resetAvailableMove, pieceColor });
       //do not set available moves if we are deselecting the current piece
-      if (!isSelected)
+      if (!isSelected) {
+        dispatch({ type: actionTypes.selectPiece, payload: { coords, pieceColor } });
         dispatch({ type: actionTypes.setAvailableMove, payload: { coords, pieceColor } });
+      }
     }
   };
 
