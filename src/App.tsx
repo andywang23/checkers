@@ -14,30 +14,30 @@ const StyledApp = styled.div`
 `;
 
 function App() {
-  const [dimensions, setDimensions] = useState<number>(0);
+  const [dimensions, setDimensions] = useState<number | null>(null);
   const [pieceColors, setPieceColor] = useState<string>('red black');
-  const [pieceShape, setPieceShape] = useState('circle');
-  const [loadedBoardState, setLoadedBoardState] = useState(null);
+  const [pieceShape, setPieceShape] = useState<string>('circle');
+  const [loadedGameState, setLoadedGameState] = useState(null);
 
   const pieceColorArr = pieceColors.split(' ');
 
   return (
     <StyledApp>
-      {dimensions === 0 || loadedBoardState === null ? (
+      {dimensions !== null || loadedGameState !== null ? (
+        <Board
+          dimensions={dimensions || undefined}
+          pieceColors={pieceColorArr}
+          pieceShape={pieceShape}
+          loadedGameState={loadedGameState}
+        />
+      ) : (
         <>
           <InputBox setDimensions={setDimensions} />
           <ColorRadioInput setPieceColor={setPieceColor} />
           <ShapeRadioInput setPieceShape={setPieceShape} />
           <p>OR</p>
-          <LoadGameInput setLoadedBoardState={setLoadedBoardState} />
+          <LoadGameInput setLoadedGameState={setLoadedGameState} />
         </>
-      ) : (
-        <Board
-          dimensions={dimensions}
-          pieceColors={pieceColorArr}
-          pieceShape={pieceShape}
-          loadedBoardState={loadedBoardState}
-        />
       )}
     </StyledApp>
   );

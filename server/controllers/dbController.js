@@ -17,12 +17,13 @@ dbController.addGameState = (req, res, next) => {
 };
 
 dbController.getGameState = (req, res, next) => {
-  const id = req.body.id;
+  const id = req.params.id;
+  console.log(id);
 
   GameGroup.findById(id, (err, data) => {
     if (err) return next(err);
 
-    res.locals.gameState = data.gameState;
+    res.locals.gameState = JSON.parse(data.gameState);
     return next();
   });
 };

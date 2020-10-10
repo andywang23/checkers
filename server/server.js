@@ -2,11 +2,13 @@ const express = require('express');
 const app = express();
 const apiRouter = require('./routes/api.js');
 app.use(express.json());
+app.use(express.json());
 
 const PORT = process.env.PORT || 8080;
 
 //------------------------- Routing -------------------------
 app.use('/api', apiRouter);
+app.use(express.urlencoded({ extended: false }));
 
 //------------------------- Generic Route Handler: 404 & Error Handling -------------------------
 app.use((req, res) => res.sendStatus(404));

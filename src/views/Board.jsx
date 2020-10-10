@@ -142,20 +142,27 @@ const gameStateReducer = (state, action) => {
   }
 };
 
-export default function Board({ dimensions, pieceColors, pieceShape, loadedBoardState }) {
+export default function Board({
+  pieceColors,
+  pieceShape,
+  loadedGameState,
+  dimensions = loadedGameState.boardState.length,
+}) {
   //useMemo to prevent unneccesary generateBoard calls when we reset the board
   const initialState = useMemo(() => {
-    return {
-      boardState: fillPieces(generateBoardState(dimensions), pieceColors, pieceShape),
-      selectedPieceCoords: [],
-      lastSelectedPieceCoords: [],
-      playerColorStartingPosition: { [pieceColors[0]]: 'top', [pieceColors[1]]: 'bottom' },
-      pieceColors,
-      currPlayerColorIdx: 1,
-    };
+    return loadedGameState
+      ? loadedGameState
+      : {
+          boardState: fillPieces(generateBoardState(dimensions), pieceColors, pieceShape),
+          selectedPieceCoords: [],
+          lastSelectedPieceCoords: [],
+          playerColorStartingPosition: { [pieceColors[0]]: 'top', [pieceColors[1]]: 'bottom' },
+          pieceColors,
+          currPlayerColorIdx: 1,
+        };
   }, [dimensions, pieceColors, pieceShape]);
 
-  const [gameState, dispatch] = useReducer(gameStateReducer, loadedBoardState || initialState);
+  const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
   const [savedGameID, setSavedGameID] = useState('');
 
   const handleResetClick = () => dispatch({ type: actionTypes.resetBoard, payload: initialState });
