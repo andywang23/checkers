@@ -35,26 +35,27 @@ const Piece = styled.div`
 `;
 
 function Box({ coords, boxState, dispatch }) {
-  const { piece, pieceShape, isSelected, isAvailableMove } = boxState;
+  const { pieceColor, pieceShape, isSelected, isAvailableMove } = boxState;
 
   const handleBoxClick = () => {
     /* two scenarios: 
     1. if box has a piece inside, then handle click will dispatch selectPiece, resetAvailableMoves, setAvailableMoves actions to gameState reducer
-    2. if box is denoted as an available move (i.e. if user has already selected a box), then clicking a box will move the selected piece to this box
+    2. if box is denoted as an available move (i.e. if user has already selected another box with a piece inside), then clicking a box will move the selected piece to this box
     */
     if (isAvailableMove) {
-      //placeholder for now
-    } else if (piece !== '-') {
+      dispatch({ type: actionTypes.movePiece, payload: { coords } });
+      dispatch({ type: actionTypes.resetAvailableMove });
+    } else if (pieceColor !== '-') {
       dispatch({ type: actionTypes.selectPiece, payload: { coords } });
       dispatch({ type: actionTypes.resetAvailableMove });
-      dispatch({ type: actionTypes.setAvailableMove, payload: { coords, piece } });
+      dispatch({ type: actionTypes.setAvailableMove, payload: { coords, pieceColor } });
     }
   };
 
   return (
     <BoxDiv coords={coords} isAvailableMove={isAvailableMove} onClick={handleBoxClick}>
-      {piece !== '-' ? (
-        <Piece background={piece} pieceShape={pieceShape} isSelected={isSelected} />
+      {pieceColor !== '-' ? (
+        <Piece background={pieceColor} pieceShape={pieceShape} isSelected={isSelected} />
       ) : null}
     </BoxDiv>
   );

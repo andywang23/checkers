@@ -14,9 +14,10 @@ const BoardDiv = styled.div`
 `;
 
 const gameStateReducer = (state, action) => {
-  let newBoard, row, col, oldRow, oldCol;
+  let newBoard, row, col, oldRow, oldCol, pieceColor, pieceShape;
   if (state.selectedPieceCoords) [oldRow, oldCol] = state.selectedPieceCoords;
   if (action.payload && action.payload.coords) [row, col] = action.payload.coords;
+  if (action.payload && action.payload.pieceColor) pieceColor = action.payload.pieceColor;
 
   switch (action.type) {
     case actionTypes.selectPiece:
@@ -35,12 +36,13 @@ const gameStateReducer = (state, action) => {
       };
 
     case actionTypes.setAvailableMove:
+      //responsible for highlighting cells we can move a piece to
       //action payload will include coord and piece color of current selected box
       //first determine if we are going from bottom to top or vice versa based on piece color
       //then calculate available move coords
       newBoard = cloneDeep(state.boardState);
-      const { piece } = action.payload;
-      const startingPosition = state.playerColorStartingPosition[piece];
+
+      const startingPosition = state.playerColorStartingPosition[pieceColor];
 
       const [leftDiagRow, leftDiagCol] =
         startingPosition === 'bottom' ? [row - 1, col - 1] : [row + 1, col - 1];
@@ -48,15 +50,17 @@ const gameStateReducer = (state, action) => {
       const [rightDiagRow, rightDiagCol] =
         startingPosition === 'bottom' ? [row - 1, col + 1] : [row + 1, col + 1];
 
-      if (newBoard[leftDiagRow] && newBoard[leftDiagRow][leftDiagCol])
+      if (newBoard[leftDiagRow] && newBoard[leftDiagRow][leftDiagCol]) {
         newBoard[leftDiagRow][leftDiagCol].isAvailableMove = !state.boardState[leftDiagRow][
           leftDiagCol
         ].isAvailableMove;
+      }
 
-      if (newBoard[rightDiagRow] && newBoard[rightDiagRow][rightDiagCol])
+      if (newBoard[rightDiagRow] && newBoard[rightDiagRow][rightDiagCol]) {
         newBoard[rightDiagRow][rightDiagCol].isAvailableMove = !state.boardState[rightDiagRow][
           rightDiagCol
         ].isAvailableMove;
+      }
 
       return {
         ...state,
@@ -66,7 +70,6 @@ const gameStateReducer = (state, action) => {
     case actionTypes.resetAvailableMove:
       //before we set new available moves, we need to clear out all the old ones
       //todo: currently this takes O(n) time, should refactor so it's O(1)
-
       return {
         ...state,
         boardState: state.boardState.map((row) =>
@@ -77,6 +80,27 @@ const gameStateReducer = (state, action) => {
             };
           })
         ),
+      };
+
+    case actionTypes.movePiece:
+      //responsible for actually moving piece after selecting
+      //payload will include where we want to move the currently selected piece to
+      //pull current selected coords to empty that box and pull the piece color
+      newBoard = cloneDeep(state.boardState);
+      [oldRow, oldCol] = state.selectedPieceCoords;
+      pieceColor = state.boardState[oldRow][oldCol].pieceColor;
+      pieceShape = state.boardState[oldRow][oldCol].pieceShape;
+
+      newBoard[oldRow][oldCol].pieceShape = '-';
+      newBoard[oldRow][oldCol].pieceColor = '-';
+      newBoard[oldRow][oldCol].isSelected = false;
+      newBoard[row][col].pieceColor = pieceColor;
+      newBoard[row][col].pieceShape = pieceShape;
+
+      return {
+        ...state,
+        boardState: newBoard,
+        selectedPieceCoords: [],
       };
 
     default:
