@@ -6,9 +6,6 @@ const BoxDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  border: 1px solid black;
 
   background-color: ${(props) => {
     const [row, col] = props.coords;
@@ -46,9 +43,12 @@ function Box({ coords, boxState, dispatch }) {
       dispatch({ type: actionTypes.movePiece, payload: { coords } });
       dispatch({ type: actionTypes.resetAvailableMove });
     } else if (pieceColor !== '-') {
-      dispatch({ type: actionTypes.selectPiece, payload: { coords } });
-      dispatch({ type: actionTypes.resetAvailableMove });
-      dispatch({ type: actionTypes.setAvailableMove, payload: { coords, pieceColor } });
+      dispatch({ type: actionTypes.resetSelectedPiece });
+      dispatch({ type: actionTypes.selectPiece, payload: { coords, pieceColor } });
+      dispatch({ type: actionTypes.resetAvailableMove, pieceColor });
+      //do not set available moves if we are deselecting the current piece
+      if (!isSelected)
+        dispatch({ type: actionTypes.setAvailableMove, payload: { coords, pieceColor } });
     }
   };
 

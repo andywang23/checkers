@@ -9,25 +9,27 @@ const BoardDiv = styled.div`
   display: grid;
   grid-template-columns: repeat(${(props) => props.dimensions}, auto);
   grid-template-rows: repeat(${(props) => props.dimensions}, auto);
-  width: 800px;
-  height: 800px;
+  width: 950px;
+  height: 950px;
 `;
 
 const gameStateReducer = (state, action) => {
   let newBoard, row, col, oldRow, oldCol, pieceColor, pieceShape;
+  const currPlayerColorIdx = state.currPlayerColorIdx;
+  const pieceColors = state.pieceColors;
   if (state.selectedPieceCoords) [oldRow, oldCol] = state.selectedPieceCoords;
   if (action.payload && action.payload.coords) [row, col] = action.payload.coords;
   if (action.payload && action.payload.pieceColor) pieceColor = action.payload.pieceColor;
 
   switch (action.type) {
     case actionTypes.selectPiece:
-      newBoard = cloneDeep(state.boardState);
-      //only one box can be selected at once
-      //toggle isSelected on both the current selected box and the previous selected cell
-      newBoard[row][col].isSelected = !state.boardState[row][col].isSelected;
-      if (state.selectedPieceCoords.length > 0) {
-        newBoard[oldRow][oldCol].isSelected = !state.boardState[oldRow][oldCol].isSelected;
+      //if piece selected does not belong to current player, don't do anything
+      if (pieceColors[currPlayerColorIdx] !== pieceColor) {
+        return state;
       }
+      newBoard = cloneDeep(state.boardState);
+
+      newBoard[row][col].isSelected = !state.boardState[row][col].isSelected;
 
       return {
         ...state,
@@ -36,10 +38,15 @@ const gameStateReducer = (state, action) => {
       };
 
     case actionTypes.setAvailableMove:
+      //if piece selected does not belong to current player, don't do anything
+      if (pieceColors[currPlayerColorIdx] !== pieceColor) {
+        return state;
+      }
+
       //responsible for highlighting cells we can move a piece to
       //action payload will include coord and piece color of current selected box
       //first determine if we are going from bottom to top or vice versa based on piece color
-      //then calculate available move coords
+      //then calculate available move coords (check if coords exist and if there exists another piece already)
       newBoard = cloneDeep(state.boardState);
 
       const startingPosition = state.playerColorStartingPosition[pieceColor];
@@ -50,13 +57,22 @@ const gameStateReducer = (state, action) => {
       const [rightDiagRow, rightDiagCol] =
         startingPosition === 'bottom' ? [row - 1, col + 1] : [row + 1, col + 1];
 
-      if (newBoard[leftDiagRow] && newBoard[leftDiagRow][leftDiagCol]) {
+      console.log(newBoard[leftDiagRow][leftDiagCol].pieceColor);
+      if (
+        newBoard[leftDiagRow] &&
+        newBoard[leftDiagRow][leftDiagCol] &&
+        newBoard[leftDiagRow][leftDiagCol].pieceColor === '-'
+      ) {
         newBoard[leftDiagRow][leftDiagCol].isAvailableMove = !state.boardState[leftDiagRow][
           leftDiagCol
         ].isAvailableMove;
       }
 
-      if (newBoard[rightDiagRow] && newBoard[rightDiagRow][rightDiagCol]) {
+      if (
+        newBoard[rightDiagRow] &&
+        newBoard[rightDiagRow][rightDiagCol] &&
+        newBoard[rightDiagRow][rightDiagCol].pieceColor === '-'
+      ) {
         newBoard[rightDiagRow][rightDiagCol].isAvailableMove = !state.boardState[rightDiagRow][
           rightDiagCol
         ].isAvailableMove;
@@ -65,6 +81,21 @@ const gameStateReducer = (state, action) => {
       return {
         ...state,
         boardState: newBoard,
+      };
+
+    case actionTypes.resetSelectedPiece:
+      //before we set new selected, we need to clear out old selected
+      //todo: currently this takes O(n) time, should refactor so it's O(1)
+      return {
+        ...state,
+        boardState: state.boardState.map((row) =>
+          row.map((col) => {
+            return {
+              ...col,
+              isSelected: false,
+            };
+          })
+        ),
       };
 
     case actionTypes.resetAvailableMove:
@@ -87,7 +118,7 @@ const gameStateReducer = (state, action) => {
       //payload will include where we want to move the currently selected piece to
       //pull current selected coords to empty that box and pull the piece color
       newBoard = cloneDeep(state.boardState);
-      [oldRow, oldCol] = state.selectedPieceCoords;
+
       pieceColor = state.boardState[oldRow][oldCol].pieceColor;
       pieceShape = state.boardState[oldRow][oldCol].pieceShape;
 
@@ -101,6 +132,7 @@ const gameStateReducer = (state, action) => {
         ...state,
         boardState: newBoard,
         selectedPieceCoords: [],
+        currPlayerColorIdx: currPlayerColorIdx === 0 ? 1 : 0,
       };
 
     default:
@@ -114,20 +146,25 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
     selectedPieceCoords: [],
     lastSelectedPieceCoords: [],
     playerColorStartingPosition: { [pieceColors[0]]: 'top', [pieceColors[1]]: 'bottom' },
+    pieceColors,
+    currPlayerColorIdx: 1,
   };
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
 
   return (
-    <BoardDiv dimensions={dimensions}>
-      {gameState.boardState.map((row, rowIdx) => (
-        <Row
-          key={rowIdx}
-          dimensions={dimensions}
-          rowIdx={rowIdx}
-          rowArr={row}
-          dispatch={dispatch}
-        />
-      ))}
-    </BoardDiv>
+    <>
+      <p>Current Player is: {gameState.pieceColors[gameState.currPlayerColorIdx].toUpperCase()}</p>
+      <BoardDiv dimensions={dimensions}>
+        {gameState.boardState.map((row, rowIdx) => (
+          <Row
+            key={rowIdx}
+            dimensions={dimensions}
+            rowIdx={rowIdx}
+            rowArr={row}
+            dispatch={dispatch}
+          />
+        ))}
+      </BoardDiv>
+    </>
   );
 }
