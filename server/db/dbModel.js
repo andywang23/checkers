@@ -12,3 +12,13 @@ mongoose
   .catch((err) => console.log(err));
 
 const Schema = mongoose.Schema;
+
+const gameStateSchema = new Schema({
+  gameState: { type: String, required: true },
+});
+
+const GameGroup = mongoose.model('game state group', gameStateSchema);
+
+module.exports = {
+  GameGroup,
+};
