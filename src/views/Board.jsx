@@ -28,7 +28,6 @@ const gameStateReducer = (state, action) => {
         return state;
       }
       newBoard = cloneDeep(state.boardState);
-
       newBoard[row][col].isSelected = !state.boardState[row][col].isSelected;
 
       return {
@@ -117,6 +116,7 @@ const gameStateReducer = (state, action) => {
       //responsible for actually moving piece after selecting
       //payload will include where we want to move the currently selected piece to
       //pull current selected coords to empty that box and pull the piece color
+      //switch player once move has succeeded
       newBoard = cloneDeep(state.boardState);
 
       pieceColor = state.boardState[oldRow][oldCol].pieceColor;

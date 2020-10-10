@@ -8,7 +8,7 @@ function ColorRadioInput({ setPieceColor }) {
         type="radio"
         value="red-black"
         name="pieceColor"
-        checked
+        defaultChecked
         onClick={() => setPieceColor('red black')}
       />
       <label htmlFor="red-black">Red / Black</label>

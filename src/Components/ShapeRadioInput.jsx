@@ -8,7 +8,7 @@ function ShapeRadioInput({ setPieceShape }) {
         type="radio"
         value="circle"
         name="pieceShape"
-        checked
+        defaultChecked
         onClick={() => setPieceShape('circle')}
       />
       <label htmlFor="circle">Circle</label>
