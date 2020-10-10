@@ -23,9 +23,7 @@ const gameStateReducer = (state, action) => {
       newBoard = cloneDeep(state.boardState);
       //only one box can be selected at once
       //toggle isSelected on both the current selected box and the previous selected cell
-
       newBoard[row][col].isSelected = !state.boardState[row][col].isSelected;
-
       if (state.selectedPieceCoords.length > 0) {
         newBoard[oldRow][oldCol].isSelected = !state.boardState[oldRow][oldCol].isSelected;
       }
@@ -34,6 +32,35 @@ const gameStateReducer = (state, action) => {
         ...state,
         boardState: newBoard,
         selectedPieceCoords: [row, col],
+      };
+
+    case actionTypes.setAvailableMove:
+      //action payload will include coord and piece color of current selected box
+      //first determine if we are going from bottom to top or vice versa based on piece color
+      //then calculate available move coords
+      newBoard = cloneDeep(state.boardState);
+      const { piece } = action.payload.piece;
+      const startingPosition = state.playerColorStartingPosition[piece];
+
+      const [leftDiagRow, leftDiagCol] =
+        piece === 'bottom' ? [row - 1, col - 1] : [row + 1, col - 1];
+
+      const [rightDiagRow, rightDiagCol] =
+        piece === 'bottom' ? [row - 1, col + 1] : [row + 1, col + 1];
+
+      if (newBoard[leftDiagRow] && newBoard[leftDiagRow][leftDiagCol])
+        newBoard[leftDiagRow][leftDiagCol].isAvailableMove = !state.boardState[leftDiagRow][
+          leftDiagCol
+        ].isAvailableMove;
+
+      if (newBoard[rightDiagRow] && newBoard[rightDiagRow][rightDiagCol])
+        newBoard[rightDiagRow][rightDiagCol].isAvailableMove = !state.boardState[rightDiagRow][
+          rightDiagCol
+        ].isAvailableMove;
+
+      return {
+        ...state,
+        boardState: newBoard,
       };
 
     default:
@@ -46,6 +73,7 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
     boardState: fillPieces(generateBoardState(dimensions), pieceColors, pieceShape),
     selectedPieceCoords: [],
     lastSelectedPieceCoords: [],
+    playerColorStartingPosition: { [pieceColors[0]]: 'top', [pieceColors[1]]: 'bottom' },
   };
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
 

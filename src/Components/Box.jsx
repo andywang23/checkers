@@ -12,6 +12,10 @@ const BoxDiv = styled.div`
 
   background-color: ${(props) => {
     const [row, col] = props.coords;
+    //if we are in a box that is a possible move, then set background to blue
+    if (props.isAvailableMove) {
+      return 'lightblue';
+    }
     //even-numbered rows will start with black boxes and alternate
     //odd-numbered cells will start with white boxes and alternate
     if (row % 2) {
@@ -35,16 +39,19 @@ function Box({ coords, boxState, dispatch }) {
 
   const handleBoxClick = () => {
     /* two scenarios: 
-    1. if box has a piece inside, then handle click will dispatch selectPiece action to gameState reducer
+    1. if box has a piece inside, then handle click will dispatch selectPiece and setAvailableMoves actions to gameState reducer
     2. if box is denoted as an available move (i.e. if user has already selected a box), then clicking a box will move the selected piece to this box
     */
     if (isAvailableMove) {
       //placeholder for now
-    } else dispatch({ type: actionTypes.selectPiece, payload: { coords } });
+    } else if (piece !== '-') {
+      dispatch({ type: actionTypes.selectPiece, payload: { coords } });
+      dispatch({ type: actionTypes.setAvailableMove, payload: { coords, piece } });
+    }
   };
 
   return (
-    <BoxDiv coords={coords} onClick={handleBoxClick}>
+    <BoxDiv coords={coords} isAvailableMove={isAvailableMove} onClick={handleBoxClick}>
       {piece !== '-' ? (
         <Piece background={piece} pieceShape={pieceShape} isSelected={isSelected} />
       ) : null}
