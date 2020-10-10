@@ -162,7 +162,8 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
 
   const handleSaveClick = async () => {
     try {
-      const res = await fetch('./api', {
+      console.log(gameState);
+      const res = await fetch('/api', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -180,6 +181,7 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
   return (
     <>
       <p>Current Player is: {gameState.pieceColors[gameState.currPlayerColorIdx].toUpperCase()}</p>
+      <p>Saved Game ID is: {savedGameID}</p>
       <span>
         <button onClick={handleSaveClick}>Save</button>
         <button onClick={handleResetClick}>Reset</button>
