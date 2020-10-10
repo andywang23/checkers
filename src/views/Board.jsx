@@ -154,10 +154,28 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
       currPlayerColorIdx: 1,
     };
   }, [dimensions, pieceColors, pieceShape]);
-  
+
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
+  const [savedGameID, setSavedGameID] = useState('');
 
   const handleResetClick = () => dispatch({ type: actionTypes.resetBoard, payload: initialState });
+
+  const handleSaveClick = async () => {
+    try {
+      const res = await fetch('./api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(gameState),
+      });
+
+      const parsedRes = await res.json();
+      setSavedGameID(parsedRes);
+    } catch {
+      setSavedGameID('Error connecting to server');
+    }
+  };
 
   return (
     <>
