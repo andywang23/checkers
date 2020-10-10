@@ -154,6 +154,7 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
       currPlayerColorIdx: 1,
     };
   }, [dimensions, pieceColors, pieceShape]);
+  
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
 
   const handleResetClick = () => dispatch({ type: actionTypes.resetBoard, payload: initialState });
