@@ -142,7 +142,7 @@ const gameStateReducer = (state, action) => {
   }
 };
 
-export default function Board({ dimensions, pieceColors, pieceShape }) {
+export default function Board({ dimensions, pieceColors, pieceShape, loadedBoardState }) {
   //useMemo to prevent unneccesary generateBoard calls when we reset the board
   const initialState = useMemo(() => {
     return {
@@ -155,7 +155,7 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
     };
   }, [dimensions, pieceColors, pieceShape]);
 
-  const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
+  const [gameState, dispatch] = useReducer(gameStateReducer, loadedBoardState || initialState);
   const [savedGameID, setSavedGameID] = useState('');
 
   const handleResetClick = () => dispatch({ type: actionTypes.resetBoard, payload: initialState });
@@ -181,7 +181,7 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
   return (
     <>
       <p>Current Player is: {gameState.pieceColors[gameState.currPlayerColorIdx].toUpperCase()}</p>
-      <p>Saved Game ID is: {savedGameID}</p>
+      <p>{savedGameID !== '' ? `Saved Game ID is: ${savedGameID}` : null}</p>
       <span>
         <button onClick={handleSaveClick}>Save</button>
         <button onClick={handleResetClick}>Reset</button>
