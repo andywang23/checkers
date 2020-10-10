@@ -160,7 +160,7 @@ export default function Board({
           pieceColors,
           currPlayerColorIdx: 1,
         };
-  }, [dimensions, pieceColors, pieceShape]);
+  }, [dimensions, pieceColors, pieceShape, loadedGameState]);
 
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
   const [savedGameID, setSavedGameID] = useState('');

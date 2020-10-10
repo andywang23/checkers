@@ -6,7 +6,7 @@ const InputBox = ({ setDimensions }) => {
   function handleSubmit() {
     const input = inputRef.current?.value;
     const dimensions = Number(input);
-    if (dimensions === NaN || dimensions < 5) {
+    if (isNaN(dimensions) || dimensions < 5) {
       return setErrorMsg('Please set a valid number (greater than 4)');
     }
 
