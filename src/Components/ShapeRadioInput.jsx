@@ -11,14 +11,14 @@ function ShapeRadioInput({ setPieceShape }) {
         checked
         onClick={() => setPieceShape('circle')}
       />
-      <label for="circle">Circle</label>
+      <label htmlFor="circle">Circle</label>
       <input
         type="radio"
         name="pieceShape"
         value="square"
         onClick={() => setPieceShape('square')}
       />
-      <label for="square">Square</label>
+      <label htmlFor="square">Square</label>
     </form>
   );
 }

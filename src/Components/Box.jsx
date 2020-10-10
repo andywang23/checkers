@@ -39,13 +39,14 @@ function Box({ coords, boxState, dispatch }) {
 
   const handleBoxClick = () => {
     /* two scenarios: 
-    1. if box has a piece inside, then handle click will dispatch selectPiece and setAvailableMoves actions to gameState reducer
+    1. if box has a piece inside, then handle click will dispatch selectPiece, resetAvailableMoves, setAvailableMoves actions to gameState reducer
     2. if box is denoted as an available move (i.e. if user has already selected a box), then clicking a box will move the selected piece to this box
     */
     if (isAvailableMove) {
       //placeholder for now
     } else if (piece !== '-') {
       dispatch({ type: actionTypes.selectPiece, payload: { coords } });
+      dispatch({ type: actionTypes.resetAvailableMove });
       dispatch({ type: actionTypes.setAvailableMove, payload: { coords, piece } });
     }
   };

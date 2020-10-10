@@ -14,8 +14,8 @@ const BoardDiv = styled.div`
 `;
 
 const gameStateReducer = (state, action) => {
-  let newBoard, row, col;
-  const [oldRow, oldCol] = state.selectedPieceCoords;
+  let newBoard, row, col, oldRow, oldCol;
+  if (state.selectedPieceCoords) [oldRow, oldCol] = state.selectedPieceCoords;
   if (action.payload && action.payload.coords) [row, col] = action.payload.coords;
 
   switch (action.type) {
@@ -39,14 +39,14 @@ const gameStateReducer = (state, action) => {
       //first determine if we are going from bottom to top or vice versa based on piece color
       //then calculate available move coords
       newBoard = cloneDeep(state.boardState);
-      const { piece } = action.payload.piece;
+      const { piece } = action.payload;
       const startingPosition = state.playerColorStartingPosition[piece];
 
       const [leftDiagRow, leftDiagCol] =
-        piece === 'bottom' ? [row - 1, col - 1] : [row + 1, col - 1];
+        startingPosition === 'bottom' ? [row - 1, col - 1] : [row + 1, col - 1];
 
       const [rightDiagRow, rightDiagCol] =
-        piece === 'bottom' ? [row - 1, col + 1] : [row + 1, col + 1];
+        startingPosition === 'bottom' ? [row - 1, col + 1] : [row + 1, col + 1];
 
       if (newBoard[leftDiagRow] && newBoard[leftDiagRow][leftDiagCol])
         newBoard[leftDiagRow][leftDiagCol].isAvailableMove = !state.boardState[leftDiagRow][
@@ -61,6 +61,22 @@ const gameStateReducer = (state, action) => {
       return {
         ...state,
         boardState: newBoard,
+      };
+
+    case actionTypes.resetAvailableMove:
+      //before we set new available moves, we need to clear out all the old ones
+      //todo: currently this takes O(n) time, should refactor so it's O(1)
+
+      return {
+        ...state,
+        boardState: state.boardState.map((row) =>
+          row.map((col) => {
+            return {
+              ...col,
+              isAvailableMove: false,
+            };
+          })
+        ),
       };
 
     default:
@@ -80,7 +96,13 @@ export default function Board({ dimensions, pieceColors, pieceShape }) {
   return (
     <BoardDiv dimensions={dimensions}>
       {gameState.boardState.map((row, rowIdx) => (
-        <Row dimensions={dimensions} rowIdx={rowIdx} rowArr={row} dispatch={dispatch} />
+        <Row
+          key={rowIdx}
+          dimensions={dimensions}
+          rowIdx={rowIdx}
+          rowArr={row}
+          dispatch={dispatch}
+        />
       ))}
     </BoardDiv>
   );

@@ -11,14 +11,14 @@ function ColorRadioInput({ setPieceColor }) {
         checked
         onClick={() => setPieceColor('red black')}
       />
-      <label for="red-black">Red / Black</label>
+      <label htmlFor="red-black">Red / Black</label>
       <input
         type="radio"
         name="pieceColor"
         value="blue-green"
         onClick={() => setPieceColor('blue green')}
       />
-      <label for="blue-green">Blue / Green</label>
+      <label htmlFor="blue-green">Blue / Green</label>
     </form>
   );
 }
